@@ -32,5 +32,10 @@ for row in data:
         st.selectbox(row[0], row[1]["dates"])
     )
 
-table = ut.get_table(data, dates)
-st.dataframe(table)
+table = ut.get_table(data, dates).reset_index()
+styled = table.style.background_gradient(
+    axis=0, 
+    cmap="Pastel2", 
+    gmap = table["process"].astype('category').cat.codes
+)
+st.dataframe(styled, hide_index=True)
