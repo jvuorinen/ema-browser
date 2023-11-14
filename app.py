@@ -1,3 +1,4 @@
 import streamlit as st
 
-st.title("Testing app")
+st.title("EMA Browzer 🙃")
+st.header("placeholder to add the app")
