@@ -51,4 +51,8 @@ def read_xls_file():
 
 
 if __name__ == "__main__":
-    df = read_xls_file()
+    data = read_data_from_xls()
+
+    table = get_table(data, [x[1]["dates"][0] for x in data]).reset_index()
+
+    table.style.highlight_max(subset="process")
