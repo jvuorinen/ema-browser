@@ -33,4 +33,4 @@ for row in data:
     )
 
 table = ut.get_table(data, dates)
-st.dataframe(table.style.highlight_max(axis=0))
+st.dataframe(table)
