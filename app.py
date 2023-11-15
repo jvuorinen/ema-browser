@@ -39,7 +39,7 @@ if chosen:
     table = ut.get_table(data, chosen).reset_index()
     styled = table.style.background_gradient(
         axis=0, 
-        cmap=ut.get_color_map("#F8FBCD", "#D6FAFF", "#FCD3F6"), 
+        cmap=ut.get_color_map("#C0EDFF", "#FFC0ED", "#EDFFC0"), 
         gmap = table["process"].astype('category').cat.codes
     )
     st.dataframe(styled, hide_index=True, height=1000)
