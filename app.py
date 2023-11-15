@@ -27,12 +27,13 @@ with st.sidebar:
 
     data = ut.read_data_from_xls()
 
+    st.header("Choose processes to show")
 
-processes = st.multiselect("Choose processes to show", data.keys())
+    processes = st.multiselect("", data.keys())
 
 chosen = {}
 for p in processes:
-    chosen[p] = st.selectbox(p, data[p]["dates"])
+    chosen[p] = st.select_slider(p, data[p]["dates"])
 
 if chosen:
     table = ut.get_table(data, chosen).reset_index()
