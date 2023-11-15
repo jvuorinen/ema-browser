@@ -1,10 +1,11 @@
 import streamlit as st
-import seaborn as sns
 
 import utils as ut
 
 
 # App start
+
+
 st.title("EMA Browzer 🙃")
 
 with st.sidebar:
@@ -24,18 +25,20 @@ with st.sidebar:
         bytes_data = uploaded_file.getvalue()
         ut.save_xls_file(bytes_data)
 
-data = ut.read_data_from_xls()
+    data = ut.read_data_from_xls()
 
-dates = []
-for row in data:
-    dates.append(
-        st.selectbox(row[0], row[1]["dates"])
+
+processes = st.multiselect("Choose processes to show", data.keys())
+
+chosen = {}
+for p in processes:
+    chosen[p] = st.selectbox(p, data[p]["dates"])
+
+if chosen:
+    table = ut.get_table(data, chosen).reset_index()
+    styled = table.style.background_gradient(
+        axis=0, 
+        cmap=ut.get_color_map("#F8FBCD", "#D6FAFF", "#FCD3F6"), 
+        gmap = table["process"].astype('category').cat.codes
     )
-
-table = ut.get_table(data, dates).reset_index()
-styled = table.style.background_gradient(
-    axis=0, 
-    cmap="Pastel2", 
-    gmap = table["process"].astype('category').cat.codes
-)
-st.dataframe(styled, hide_index=True)
+    st.dataframe(styled, hide_index=True)

@@ -1,4 +1,5 @@
 import pandas as pd
+from matplotlib.colors import LinearSegmentedColormap
 
 
 XLS_FILE = "ema_data.xlsx"
@@ -20,20 +21,22 @@ def read_data_from_xls():
     sheets = list(meta.sheet)
     dataset_names = list(meta.dataset)
 
-    data = []
+    data = {}
     for s, n in zip(sheets, dataset_names):
         df = pd.read_excel(XLS_FILE, sheet_name=s)
-        data.append((n, parse_dataset(df)))
+        data[n] = parse_dataset(df)
     return data
 
 
-def get_table(data, dates):
+def get_table(data, chosen: dict):
     final = []
-    for date, row in zip(dates, data):
-        idx = row[1]["dates"].index(date)
-        for d, st in zip(row[1]["data"][idx], row[1]["steps"]):
-            rec = (d, row[0], st)
+
+    for p, start in chosen.items():
+        idx = data[p]["dates"].index(start)
+        for d, step in zip(data[p]["data"][idx], data[p]["steps"]):
+            rec = d, p, step
             final.append(rec)
+
     df = pd.DataFrame(final)
     df.columns = ["date", "process", "step"]
     return df.set_index("date").sort_index()
@@ -50,9 +53,25 @@ def read_xls_file():
     return file_data
 
 
+def hex_to_rgb(hex_color):
+    hex_color = hex_color.lstrip('#')
+    return tuple(int(hex_color[i:i+2], 16) / 255.0 for i in (0, 2, 4))
+
+
+def get_color_map(hex_a, hex_b, hex_c):
+    colors = [hex_to_rgb(hex_a), hex_to_rgb(hex_b), hex_to_rgb(hex_c)]
+    positions = [0.0, 0.5, 1.0]
+
+    cmap = LinearSegmentedColormap.from_list('custom_cmap', list(zip(positions, colors)), N=256)
+    return cmap
+
+
 if __name__ == "__main__":
     data = read_data_from_xls()
+
+    chosen = {}
 
     table = get_table(data, [x[1]["dates"][0] for x in data]).reset_index()
 
     table.style.highlight_max(subset="process")
+   
