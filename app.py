@@ -42,4 +42,4 @@ if chosen:
         cmap=ut.get_color_map("#F8FBCD", "#D6FAFF", "#FCD3F6"), 
         gmap = table["process"].astype('category').cat.codes
     )
-    st.dataframe(styled, hide_index=True)
+    st.dataframe(styled, hide_index=True, height=1000)
