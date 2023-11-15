@@ -6,12 +6,12 @@ XLS_FILE = "ema_data.xlsx"
 
 
 def parse_dataset(df):
-    key_col = df.columns[0]
-    tmp = df.dropna().astype(str).set_index(key_col)
+    tmp = df.dropna().astype(str)
 
-    dates = list(tmp.index)
+    key_col = tmp.columns[0]
+    dates = list(tmp[key_col])
     steps = list(tmp.columns)
-    data = list(tmp.to_records())
+    data = list([r for r in tmp.to_records(index=False)])
     return {"dates": dates, "steps": steps, "data": data}
 
 
@@ -69,9 +69,8 @@ def get_color_map(hex_a, hex_b, hex_c):
 if __name__ == "__main__":
     data = read_data_from_xls()
 
-    chosen = {}
+    P_IDX = 0
+    p = list(data.keys())[P_IDX]
+    chosen = {p: data[p]["dates"][P_IDX]}
 
-    table = get_table(data, [x[1]["dates"][0] for x in data]).reset_index()
-
-    table.style.highlight_max(subset="process")
-   
+    get_table(data, chosen)
