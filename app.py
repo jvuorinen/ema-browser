@@ -6,7 +6,7 @@ import utils as ut
 # App start
 
 
-st.title("EMA Browzer 🙃")
+st.title("EMA MAA Timetables")
 
 with st.sidebar:
     st.header("Download dataset for editing")
