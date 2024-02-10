@@ -31,9 +31,22 @@ with st.sidebar:
 
     processes = st.multiselect("", data.keys())
 
+def update_rolling_date(rolling_date: str, date: list[str]):
+    for d in date:
+        if d > rolling_date:
+            return d
+    return rolling_date
+
+rolling_date = "1900-01-01"
 chosen = {}
 for p in processes:
-    chosen[p] = st.select_slider(p, data[p]["dates"])
+    dates = data[p]["dates"]
+    rolling_date = update_rolling_date(rolling_date, dates)
+    chosen[p] = st.select_slider(p, dates, value = rolling_date)
+
+    # Update rolling date
+    ix = dates.index(chosen[p])
+    rolling_date = data[p]["data"][ix][-1]
 
 if chosen:
     table = ut.get_table(data, chosen).reset_index()
