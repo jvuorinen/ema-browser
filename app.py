@@ -42,7 +42,7 @@ chosen = {}
 for p in processes:
     dates = data[p]["dates"]
     rolling_date = update_rolling_date(rolling_date, dates)
-    chosen[p] = st.select_slider(p, dates, value = rolling_date)
+    chosen[p] = st.selectbox(p, dates, index=dates.index(rolling_date))
 
     # Update rolling date
     ix = dates.index(chosen[p])
